@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { useOverlay } from "./providers/overlay-provider.tsx";
 import { OverlayBaseProps } from "./controllers/overlay-controller.ts";
 
-const TestModal = ({
-  resolve,
-  reject,
-  title,
-}: OverlayBaseProps & { title: string }) => {
+const TestModal = ({ resolve, reject }: OverlayBaseProps) => {
   // const modal = useOverlay();
   // const resolver = async () => {
   //   const res = async () =>
