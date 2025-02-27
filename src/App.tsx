@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -13,11 +13,20 @@ const Test = ({resolve, reject, title}: {resolve: (value: any) => void; reject: 
         backgroundColor: 'white',
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      <h1>{title}</h1>
-      <button onClick={() => resolve('hello')}>resolve</button>
-      <button onClick={() => reject('hello')}>reject</button>
+      <h1 style={{color: 'black'}}>{title}</h1>
+      <div
+        style={{
+          display: 'flex',
+          gap: '4px',
+        }}
+      >
+        <button onClick={() => resolve('resolve')}>resolve</button>
+        <button onClick={() => reject('reject')}>reject</button>
+      </div>
     </dialog>
   );
 }
@@ -27,11 +36,33 @@ function App() {
   const modal = useOverlay();
 
   const handleButtonClick = async () => {
-    const res1 = await modal.push('test', Test, {title: 'eddie'})
-    alert(res1);
-    const res2 = await modal.push('test', Test, {title: 'eddie'})
-    alert(res2);
+    try{
+      const res1 = await modal.push<{title: string}, string>('test1', Test, {title: 'Modal1'})
+      alert(res1);
+    } catch (error) {
+      console.error('오류 발생', error)
+    }
+
+    try {
+      const res2 = await modal.push('test2', Test, {title: 'Modal2'})
+      alert(res2);
+    } catch(error) {
+      console.error('오류 발생', error)
+    }
   }
+
+  const initModal = async () => {
+    try{
+      const res1 = await modal.push('test1', Test, {title: 'Init'})
+      alert(res1);
+    } catch (error) {
+      console.error('오류 발생', error)
+    }
+  }
+
+  useEffect(() => {
+    initModal();
+  }, []);
 
   return (
     <>

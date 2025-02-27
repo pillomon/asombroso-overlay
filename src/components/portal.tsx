@@ -33,9 +33,9 @@ export default function OverlayContainer() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(topComponentInfo);
-  }, [topComponentInfo]);
+  // useEffect(() => {
+  //   console.log(topComponentInfo);
+  // }, [topComponentInfo]);
 
 
   if (!topComponentInfo || !OverlayElement) return <></>;

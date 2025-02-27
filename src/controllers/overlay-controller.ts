@@ -1,11 +1,16 @@
 import React, {Dispatch, SetStateAction} from 'react';
 
+export interface OverlayBaseProps<R = unknown> {
+  resolve: (value: R) => void;
+  reject: (reason: any) => void;
+}
+
 interface OverlayInfo {
   key: string;
   Component: React.FC<any>;
-  props: unknown;
-  resolve: (value: any) => void;
-  reject: (reason: any) => void;
+  props: any;
+  resolve: OverlayBaseProps<any>['resolve'];
+  reject: OverlayBaseProps<any>['reject'];
 }
 type FlagState = [number, Dispatch<SetStateAction<number>>]
 
@@ -13,7 +18,7 @@ export default class OverlayController {
   private flagState: FlagState;
   private overlayInfos: OverlayInfo[] = [];
 
-  constructor(flagState: any) {
+  constructor(flagState: FlagState) {
     this.flagState = flagState;
   }
 
@@ -24,9 +29,9 @@ export default class OverlayController {
   get top() {
     return this.overlayInfos[this.overlayInfos.length - 1];
   }
-  private handlePromise(key: string, resolver: (value: unknown) => void, value: any) {
+  private handlePromise<R>(key: string, resolver: (value: R) => void, value: R): void {
     resolver(value);
-    this.overlayInfos = this.overlayInfos.filter(({ key: _key }) => key != _key);
+    this.overlayInfos = this.overlayInfos.filter(({ key: _key }) => key !== _key);
     this.flush();
   }
   clear() {
@@ -38,13 +43,13 @@ export default class OverlayController {
     this.overlayInfos.pop();
     this.flush();
   }
-  async push(key: string, Component: React.FC<any>, props: unknown) {
+  async push<P = object, R = unknown>(key: string, Component: React.FC<P & OverlayBaseProps<R>>, props: P): Promise<R> {
     return await new Promise((resolve, reject) => {
       this.overlayInfos.push({
         key: key,
         Component: Component,
         props: props,
-        resolve: (value) => this.handlePromise(key, resolve, value),
+        resolve: (value) => this.handlePromise<R>(key, resolve, value),
         reject: (reason) => this.handlePromise(key, reject, reason),
       });
       this.flush();
