@@ -6,15 +6,6 @@ import {useOverlay} from "../providers/overlay-provider.tsx";
 
 const OverlayId = 'portal';
 
-// const Overlay = () => {
-//   return (
-//     <div
-//       id="overlay"
-//       className="h-full w-full bg-alpha-black-50 backdrop-blur-md"
-//     />
-//   );
-// };
-
 export default function OverlayContainer() {
   const overlay = useOverlay();
   const topComponentInfo = overlay.top;
@@ -33,27 +24,11 @@ export default function OverlayContainer() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   console.log(topComponentInfo);
-  // }, [topComponentInfo]);
-
-
   if (!topComponentInfo || !OverlayElement) return <></>;
 
   return ReactDOM.createPortal(
     <div
-      style={{
-        width: '100vw',
-        height: '100vh',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        zIndex: 9999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-      }}
+      className="w-screen backdrop-blur-md h-screen fixed top-0 left-0 z-[9999] flex items-center justify-center bg-black/50"
     >
       <topComponentInfo.Component
         resolve={topComponentInfo.resolve}
